@@ -1,0 +1,61 @@
+#include <fstream>
+#include <vector>
+#include <iostream>
+ 
+using namespace std;
+ 
+vector< vector<int> > graf;
+vector<bool> used;
+vector<int> order;
+ 
+void dfs (int v) {
+    used[v] = true;
+    for (int u: graf[v]){
+        if (!used[u])
+            dfs(u);
+    }
+    order.push_back(v);
+}
+ 
+int main() {
+    ifstream fin("hamiltonian.in");
+    ofstream fout("hamiltonian.out");
+    int n, m;
+    fin >> n >> m;
+    graf.resize(n);
+ 
+    for (int i = 0; i < m; i++) {
+        int v1, v2;
+        fin >> v1 >> v2;
+        v1--;
+        v2--;
+        graf[v1].push_back(v2);
+    }
+    used.assign(n, false);
+ 
+    for (int i = 0; i < n; i++)
+        if (used[i] == false)
+            dfs(i);
+ 
+ 
+    bool pap = true;
+    for (int i = order.size() - 1; i > 0; i--) {
+        bool mom = false;
+        for (int j = 0; j < graf[order[i]].size(); j++)
+            if (graf[order[i]][j] == order[i - 1])
+                mom = true;
+        if (mom == false)
+        {
+            pap = false;
+            break;
+        }
+    }
+    if (pap == true)
+ 
+        fout << "YES";
+ 
+    else
+ 
+        fout << "NO";
+    return 0;
+}
