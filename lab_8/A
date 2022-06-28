@@ -1,0 +1,38 @@
+#include <iostream>
+#include <fstream>
+ 
+using namespace std;
+ 
+int main()
+{
+    ifstream entrance("input.txt");
+    ofstream output("output.txt");
+ 
+    int m,n;
+    entrance >> n >> m;
+    int mat[n][n];
+    int  row_top, col_top; // рёбра
+ 
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+ 
+            mat[i][j] = 0;
+ 
+    }
+ 
+    for (int i = 0; i < m; ++i)
+    {
+        entrance >> row_top >> col_top;
+        mat[row_top - 1][col_top - 1] = 1;
+        //mat[col_top + 1][row_top - 1] = 0;
+    }
+ 
+    for (int i = 0; i < n; ++i)
+    {
+        for (int j = 0; j < n; ++j)
+            output << mat[i][j] << " ";
+        output << endl;
+    }
+    return 0;
+}
