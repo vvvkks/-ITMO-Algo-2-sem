@@ -1,0 +1,68 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+ 
+using namespace std;
+ 
+vector<int> parent;
+vector<pair<long long, pair<long long, long long>>> graf;
+ 
+int get_root(int v)
+{
+    if (v == parent[v])
+        return v;
+    else
+        parent[v] = get_root(parent[v]);
+}
+ 
+void DSUunite(int firstT, int secondT)
+{
+    firstT = get_root(firstT);
+    secondT = get_root(secondT);
+ 
+    if (firstT != secondT)
+        parent[firstT] = secondT;
+}
+ 
+int main()
+{
+    ifstream fin("spantree3.in");
+    ofstream fout("spantree3.out");
+ 
+    int n, m, v1, v2,w;
+    fin >> n >> m;
+ 
+    parent.resize(n);
+ 
+    for (int i = 0; i < m; i++)
+    {
+        fin >> v1 >> v2 >> w;
+        v1--;
+        v2--;
+ 
+        graf.push_back(make_pair(w, make_pair(v1, v2)));
+    }
+ 
+    sort(graf.begin(), graf.end());
+ 
+    for (int i = 0; i < n; ++i)
+        parent[i] = i;
+ 
+    long long min_weight_tree = 0;
+ 
+    for (int i = 0; i < m; ++i)
+    {
+        int edge1 = graf[i].second.first;
+        int edge2 = graf[i].second.second;
+        int weight = graf[i].first;
+ 
+        if (get_root(edge1) != get_root(edge2))
+        {
+            min_weight_tree += weight;
+            DSUunite(edge1, edge2);
+        }
+    }
+ 
+    fout << min_weight_tree;
+}
