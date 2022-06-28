@@ -1,0 +1,67 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+ 
+using namespace std;
+ 
+vector<vector<int>> graf;
+vector<char> color;
+vector<int> cycle;
+ 
+int start = -1, finish = -1;
+void dfs(int v)
+{
+    color[v] = 1;
+    for (int i: graf[v])
+    {
+        if (color[i] == 1)
+        {
+            start = i;
+            finish = v;
+        }
+        else if (color[i] == 2)
+        {
+            cycle[i] = v;
+            dfs(i);
+        }
+    }
+    color[v] = 2;
+}
+ 
+int main()
+{
+    ifstream fin("cycle.in");
+    ofstream fout("cycle.out");
+    int n, m;
+ 
+    fin >> n >> m;
+ 
+    graf.resize(n);
+    color.assign(n, 0);
+    cycle.assign(n, -1);
+    for (int i = 0; i < m; i++)
+    {
+        int v1, v2;
+        fin >> v1 >> v2;
+        v1--;
+        v2--;
+        graf[v1].push_back(v2);
+    }
+ 
+    for (int i = 0; i < n; i++)
+        if (color[i] == 0)
+            dfs(i);
+    if (start == -1)
+        fout << "NO";
+    else
+    {
+        fout << "YES" << endl;
+        vector<int> res;
+        res.push_back(start + 1);
+        for (int i = finish; i != start; i = cycle[i])
+            res.push_back(i + 1);
+        for (int i = res.size() - 1; i >= 0; i--)
+            fout << res[i] << " ";
+    }
+    return 0;
+}
