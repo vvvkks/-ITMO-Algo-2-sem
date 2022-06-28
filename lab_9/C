@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+ 
+using namespace std;
+ 
+vector<vector<int>> graf;
+vector<int> used;
+ 
+void dfs(int v) {
+    for (int u: graf[v]) {
+        if (used[u] == used [v]){
+            cout << "NO";
+            exit(0);
+        }
+        else if (used[u] == 0){
+            if (used[v] == 1)
+                used[u] = 2;
+            else
+                used[u] = 1;
+            dfs(u);
+        }
+    }
+}
+ 
+ 
+int main() {
+    freopen("bipartite.in", "r", stdin);
+    freopen("bipartite.out","w", stdout);
+ 
+    int n,m;
+    cin >> n >> m;
+ 
+    graf.resize(n);
+    used.resize(n);
+ 
+    for (int i = 0; i<m; i++){
+        int v1,v2;
+        cin >> v1 >> v2;
+        v1--;
+        v2--;
+        graf[v1].push_back(v2);
+        graf[v2].push_back(v1);
+    }
+ 
+    for (int i = 0; i < n; i++) {
+        if (used[i] == 0) {
+            used[i] = 1;
+            dfs(i);
+        }
+    }
+    cout << "YES";
+    
