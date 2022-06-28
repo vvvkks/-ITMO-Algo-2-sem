@@ -1,0 +1,45 @@
+#include<fstream>
+#include<vector>
+#include<algorithm>
+ 
+using namespace std;
+ 
+const int INF = INT_MAX;
+vector<vector<int>> graf;
+ 
+int main()
+{
+    ifstream fin("pathsg.in");
+    ofstream fout("pathsg.out");
+ 
+    int n, m, v1, v2, weight;
+    fin >> n >> m;
+ 
+    graf.resize(n, vector<int>(n, INF));
+    for (int i = 0; i < m; i++)
+ 
+    {
+        fin >> v1 >> v2 >> weight;
+        --v1;
+        --v2;
+        graf[v1][v2] = weight;
+    }
+ 
+    for (int k = 0; k < n; k++)
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
+                if (graf[i][k] < INF && graf[k][j] < INF)
+                    (graf[i][k] + graf[k][j]) > graf[i][j] ? graf[i][j] = graf[i][j] : graf[i][j] = (graf[i][k] + graf[k][j]);
+ 
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            if (i == j)
+                graf[i][j] = 0;
+            fout << graf[i][j] << " ";
+        }
+        fout << endl;
+    }
+    return 0;
+}
