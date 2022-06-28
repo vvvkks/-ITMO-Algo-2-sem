@@ -1,0 +1,51 @@
+#include <fstream>
+#include <vector>
+#include <set>
+using namespace std;
+ 
+const int INF = INT_MAX;
+ 
+vector<vector<pair<long long, long long>>> graf;
+ 
+vector<long long> Dijkstra(long long n)
+{
+    vector<long long> distance(n, INF);
+    distance[0] = 0;
+    set <pair<long long, long long>> queue; 
+    queue.insert(make_pair(distance[0], 0));
+    while (!queue.empty())
+    {
+        pair<long long, long long> top = *queue.begin();
+        queue.erase(queue.begin());
+        for (auto& i : graf[top.second])
+        {
+            if (distance[top.second] + i.first < distance[i.second])
+            {
+                queue.erase({distance[i.second], i.second});
+                distance[i.second] = distance[top.second] + i.first;
+                queue.emplace(pair<long long, long long>{distance[i.second], i.second});
+            }
+        }
+    }
+    return distance;
+}
+ 
+int main()
+{
+    ifstream fin ("pathbgep.in");
+    ofstream fout ("pathbgep.out");
+    long long n, m, x, y, length;
+    fin >> n >> m;
+    graf.resize(n);
+    for (long long j = 0; j < m; j++)
+    {
+        fin >> x >> y >> length;
+        x--, y--;
+        graf[x].push_back({length, y});
+        graf[y].push_back({length, x});
+    }
+    vector<long long> d = Dijkstra(n);
+    for (auto i : d)
+        fout << i << ' ';
+    return 0;
+}
