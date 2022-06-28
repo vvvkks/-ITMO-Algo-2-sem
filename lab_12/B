@@ -1,0 +1,50 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+ 
+ 
+#define ll long long
+static ll INF = 100000000000000;
+ 
+using namespace std;
+ 
+int main() {
+ 
+    long long n;
+    cin >> n;
+ 
+    vector<long long> arr(n);
+    for (int i = 0; i < n; ++i)
+        cin >> arr[i];
+ 
+    vector<ll> distance(n + 1, INF), prev(n, 0), index_of_the_larg(n + 1, 0);
+    distance[0] = -INF;
+    index_of_the_larg[0] = -1;
+    int length = distance[0];
+ 
+    for (int i = 0; i < n; i++)
+    {
+        int j = int(upper_bound(distance.begin(), distance.end(), arr[i]) - distance.begin());
+        if ((distance[j - 1] < arr[i]) && (arr[i] < distance[j])) {
+            distance[j] = arr[i];
+            prev[i] = index_of_the_larg[j - 1];
+            index_of_the_larg[j] = i;
+            length = max(length, j);
+        }
+    }
+ 
+    vector<long long> answer;
+    long long last = index_of_the_larg[length];
+    while (last != -1)
+    {
+        answer.push_back(arr[last]);
+        last = prev[last];
+    }
+ 
+    reverse(answer.begin(), answer.end());
+ 
+    cout << answer.size() << "\n";
+    for (auto i : answer)
+        cout << i << " ";
+}
