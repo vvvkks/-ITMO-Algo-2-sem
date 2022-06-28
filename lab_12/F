@@ -1,0 +1,45 @@
+#include <fstream>
+#include <vector>
+using namespace std;
+ 
+vector<vector<int>> answer;
+vector<vector<int> > tree;
+vector<int> weight;
+ 
+void dfs(int v)
+{
+    answer[v][0] = 0;
+    answer[v][1] = weight[v];
+    for (auto u : tree[v])
+        dfs(u);
+    for (auto u : tree[v])
+    {
+        answer[v][1] += answer[u][0];
+        answer[v][0] += max(answer[u][0], answer[u][1]);
+    }
+}
+ 
+int main()
+{
+    ifstream in("selectw.in");
+    ofstream out("selectw.out");
+    int n;
+    int root;
+    in >> n;
+    tree.resize(n);
+    weight.assign(n,0);
+    answer.assign(n, vector<int>(2, 0));
+ 
+    for (int i = 0; i < n; ++i) {
+        int parent;
+        in >> parent >> weight[i];
+ 
+        if (parent != 0)
+            tree[parent - 1].push_back(i); //child
+        else
+            root = i;
+    }
+ 
+    dfs(root);
+    out << max(answer[root][0], answer[root][1]);
+}
