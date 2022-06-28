@@ -1,0 +1,28 @@
+#include <fstream>
+#include <vector>
+ 
+using namespace std;
+ 
+vector<int> graf;
+ 
+int main()
+{
+    ifstream fin("input.txt");
+    ofstream fout("output.txt");
+    int n, m;
+    fin >> n >> m;
+    graf.assign(n, 0);
+    for (int i = 0; i < m; i++)
+    {
+        int v1, v2;
+        fin >> v1 >> v2;
+        v1--;
+        v2--;
+        graf[v1]++;
+        graf[v2]++;
+    }
+    for (int i = 0; i < n; i++)
+    {
+        fout << graf[i] << " ";
+    }
+}
