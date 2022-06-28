@@ -1,0 +1,33 @@
+#include <iostream>
+#include <vector>
+ 
+using namespace std;
+ 
+const int p = 1000000000;
+ 
+int main() {
+ 
+    int n;
+    vector<long long> color;
+    vector<vector<long long> > max_options;
+ 
+    cin >> n;
+    color.resize(n);
+    max_options.resize(n, vector<long long> (n, 0));
+    for (int i = 0; i < n; i++)
+    {
+        cin >> color[i];
+        max_options[i][i] = 1;
+    }
+ 
+    for (int i = 1; i < n; i++) {
+        for (int j = 0; j + i < n; j++) {
+            if (color[j] == color[j + i])
+                max_options[j][j + i] = (max_options[j + 1][j + i] % p + max_options[j][j + i - 1] % p + 1) % p;
+            else
+                max_options[j][j + i] = (max_options[j + 1][j + i] % p + max_options[j][j + i - 1] % p - max_options[j + 1][j + i - 1] % p) % p;
+        }
+    }
+    cout <<(max_options[0][n - 1] + p) % p;
+    return 0;
+}
