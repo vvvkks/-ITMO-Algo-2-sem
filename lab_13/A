@@ -1,0 +1,50 @@
+#include <fstream>
+#include <vector>
+ 
+using namespace std;
+ 
+vector<int> I_Want_Holidays(string t, string p)
+{
+    int n = t.size();
+    int m = p.size();
+    vector<int> answer;
+ 
+    for (int i = 0; i < n; i++)
+    {
+        if (t[i] == p[0])
+        {
+            if (m != 1)
+                for (int j = 1; j < m; j++)
+                {
+                    if (t[i + j] == p[j])
+                    {
+                        if (j == m - 1)
+                            answer.push_back(i);
+                        continue;
+                    }
+                    else
+                        break;
+                }
+            else
+                answer.push_back(i);
+        }
+    }
+    return answer;
+}
+ 
+int main()
+{
+    ifstream in("search1.in");
+    ofstream out("search1.out");
+    string p, t;
+    in >> p >> t;
+    vector<int> str;
+    str = I_Want_Holidays(t, p);
+ 
+    out << str.size() << "\n";
+    for (int i: str)
+    {
+        out << i + 1 << " ";
+    }
+    return 0;
+}
